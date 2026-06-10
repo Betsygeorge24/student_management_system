@@ -1,0 +1,16 @@
+:root {
+  background: #f7f9fc;
+}
+body {
+  min-height: 100vh;
+  background: #f7f9fc;
+}
+.card {
+  border-radius: 0.85rem;
+}
+.table-responsive {
+  border-radius: 0.75rem;
+}
+.navbar-brand {
+  font-weight: 600;
+}
