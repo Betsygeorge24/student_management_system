@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import API from '../services/api'
@@ -8,20 +8,28 @@ const StudentList = () => {
   const [students, setStudents] = useState([])
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
+  const [message, setMessage] = useState('Search by name, email, or grade.')
+  const [refreshing, setRefreshing] = useState(false)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const loadStudents = async () => {
-      try {
-        const response = await API.get('/students/')
-        setStudents(response.data)
-      } catch (error) {
-        toast.error('Could not load students.')
-      } finally {
-        setLoading(false)
-      }
+  const fetchStudents = useCallback(async () => {
+    try {
+      const response = await API.get('/students/')
+      setStudents(response.data)
+    } catch (error) {
+      toast.error('Could not load students.')
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
     }
-    loadStudents()
+  }, [])
+
+  useEffect(() => {
+    fetchStudents()
+  }, [fetchStudents])
+
+  useEffect(() => {
+    document.title = 'Student List • SchoolAdmin'
   }, [])
 
   const filteredStudents = useMemo(
@@ -37,6 +45,16 @@ const StudentList = () => {
     [students, search]
   )
 
+  useEffect(() => {
+    if (loading) {
+      setMessage('Loading student records...')
+    } else if (!search) {
+      setMessage('Search by name, email, or grade.')
+    } else {
+      setMessage(`${filteredStudents.length} ${filteredStudents.length === 1 ? 'result' : 'results'} found`)
+    }
+  }, [loading, search, filteredStudents.length])
+
   const handleDelete = async (studentId) => {
     const confirmed = window.confirm('Delete this student permanently?')
     if (!confirmed) {
@@ -51,6 +69,11 @@ const StudentList = () => {
     }
   }
 
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    await fetchStudents()
+  }
+
   return (
     <>
       <Navbar />
@@ -58,14 +81,24 @@ const StudentList = () => {
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
           <div>
             <h2>Student List</h2>
-            <p className="text-muted">Search, edit, or remove student records.</p>
+          
+            <small className="text-secondary">{message}</small>
           </div>
-          <button className="btn btn-primary" onClick={() => navigate('/students/add')}>
-            Add Student
-          </button>
+
+          <div className="d-flex flex-wrap gap-2">
+            <button className="btn btn-outline-secondary" onClick={() => setSearch('')} disabled={!search}>
+              Clear Search
+            </button>
+            <button className="btn btn-outline-primary" onClick={handleRefresh} disabled={refreshing}>
+              {refreshing ? 'Refreshing...' : 'Refresh'}
+            </button>
+            <button className="btn btn-primary" onClick={() => navigate('/students/add')}>
+              Add Student
+            </button>
+          </div>
         </div>
 
-        <div className="mb-3">
+        <div className="mb-3 search-panel">
           <input
             className="form-control"
             placeholder="Search by name, email, or grade"
@@ -99,7 +132,7 @@ const StudentList = () => {
                     <td>{student.email}</td>
                     <td>{student.age}</td>
                     <td>{student.grade}</td>
-                    <td className="text-end">
+                    <td className="text-end student-actions">
                       <button
                         className="btn btn-sm btn-outline-secondary me-2"
                         onClick={() => navigate(`/students/${student.id}/edit`)}
@@ -117,7 +150,7 @@ const StudentList = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="text-center py-4">
+                  <td colSpan="5" className="text-center py-4 text-muted">
                     No students found.
                   </td>
                 </tr>

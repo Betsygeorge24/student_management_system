@@ -7,7 +7,22 @@ const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [helperText, setHelperText] = useState('Enter your credentials to continue.')
   const navigate = useNavigate()
+
+  useEffect(() => {
+    document.title = 'Login • SchoolAdmin'
+  }, [])
+
+  useEffect(() => {
+    if (loading) {
+      setHelperText('Signing you in...')
+    } else if (!username || !password) {
+      setHelperText('Enter your credentials to continue.')
+    } else {
+      setHelperText('Ready to login.')
+    }
+  }, [username, password, loading])
 
   useEffect(() => {
     const token = localStorage.getItem('studentAppToken')
@@ -69,7 +84,8 @@ const Login = () => {
                   {loading ? 'Signing in...' : 'Login'}
                 </button>
               </form>
-              <div className="mt-3 text-center text-muted small">
+              <div className="mt-3 text-center text-muted small">{helperText}</div>
+              <div className="mt-2 text-center text-muted small">
                 Sample credentials: admin / adminpass
               </div>
             </div>
