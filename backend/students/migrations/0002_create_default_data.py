@@ -1,25 +1,30 @@
 from django.db import migrations
 
 
-def create_default_data(apps, schema_editor):
-    Student = apps.get_model('students', 'Student')
+def reset_admin_password(apps, schema_editor):
     User = apps.get_model('auth', 'User')
 
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser('admin', 'admin@example.com', 'adminpass')
+    user, created = User.objects.get_or_create(
+        username='admin',
+        defaults={
+            'email': 'admin@example.com',
+            'is_staff': True,
+            'is_superuser': True,
+        }
+    )
 
-    if not Student.objects.exists():
-        Student.objects.create(name='Maria Rivera', email='maria.rivera@example.com', age=15, grade='10')
-        Student.objects.create(name='David King', email='david.king@example.com', age=17, grade='12')
-        Student.objects.create(name='Sophia Turner', email='sophia.turner@example.com', age=14, grade='9')
+    user.set_password('adminpass')
+    user.is_staff = True
+    user.is_superuser = True
+    user.save()
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('students', '0001_initial'),
+        ('students', '0002_create_default_data'),
     ]
 
     operations = [
-        migrations.RunPython(create_default_data),
+        migrations.RunPython(reset_admin_password),
     ]
