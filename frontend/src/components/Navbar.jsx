@@ -1,12 +1,22 @@
 import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import { logout } from '../services/api'
 
 const Navbar = () => {
   const navigate = useNavigate()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen)
+  }
+
+  const closeMenu = () => {
+    setIsMenuOpen(false)
   }
 
   return (
@@ -18,28 +28,27 @@ const Navbar = () => {
         <button
           className="navbar-toggler"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mainNavbar"
           aria-controls="mainNavbar"
-          aria-expanded="false"
+          aria-expanded={isMenuOpen}
           aria-label="Toggle navigation"
+          onClick={toggleMenu}
         >
           <span className="navbar-toggler-icon" />
         </button>
-        <div className="collapse navbar-collapse" id="mainNavbar">
+        <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`} id="mainNavbar">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link" to="/dashboard">
+              <Link className="nav-link" to="/dashboard" onClick={closeMenu}>
                 Dashboard
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/students">
+              <Link className="nav-link" to="/students" onClick={closeMenu}>
                 Students
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/students/add">
+              <Link className="nav-link" to="/students/add" onClick={closeMenu}>
                 Add Student
               </Link>
             </li>
