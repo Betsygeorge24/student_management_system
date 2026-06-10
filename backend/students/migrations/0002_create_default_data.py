@@ -22,9 +22,9 @@ def create_default_data(apps, schema_editor):
         user.save()
 
     if not Student.objects.exists():
-        Student.objects.create(name='Maria Rivera', email='maria.rivera@example.com', age=15, grade='10')
-        Student.objects.create(name='David King', email='david.king@example.com', age=17, grade='12')
-        Student.objects.create(name='Sophia Turner', email='sophia.turner@example.com', age=14, grade='9')
+        Student.objects.create(name='Maria ', email='maria@example.com', age=15, grade='10')
+        Student.objects.create(name='David ', email='david@example.com', age=17, grade='12')
+        Student.objects.create(name='Sophia', email='sophia@example.com', age=14, grade='9')
 
 
 class Migration(migrations.Migration):
