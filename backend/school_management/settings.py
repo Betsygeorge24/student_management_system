@@ -6,8 +6,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-please-change-this-secret-key')
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('true', '1')
 ALLOWED_HOSTS = ['*']
-
-CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
+CSRF_TRUSTED_ORIGINS = [
+    "https://student-management-system-sandy-omega.vercel.app",
+    "https://*.onrender.com"
+]
+CORS_ALLOWED_ORIGINS = [
+    "https://student-management-system-sandy-omega.vercel.app",
+]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
