@@ -34,11 +34,17 @@ const Login = () => {
     const autoLogin = async () => {
       setLoading(true)
       try {
-        const response = await API.post('/login/', { username: 'admin', password: 'adminpass' })
+        let response
+        try {
+          response = await API.post('/login/', { username: 'sa', password: 'adminpass' })
+        } catch (firstError) {
+          response = await API.post('/login/', { username: 'admin', password: 'adminpass' })
+          toast.info('sa login failed; using admin fallback')
+        }
         const token = response.data.token
         localStorage.setItem('studentAppToken', token)
         setAuthHeader(token)
-        toast.success('Logged in as default admin')
+        toast.success('Logged in with default credentials')
         navigate('/dashboard', { replace: true })
       } catch (error) {
         console.error('Default login failed', error)
@@ -86,7 +92,7 @@ const Login = () => {
                     className="form-control"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="admin"
+                    placeholder="sa"
                   />
                 </div>
                 <div className="mb-4">
@@ -105,10 +111,10 @@ const Login = () => {
               </form>
               <div className="mt-3 text-center text-muted small">{helperText}</div>
               <div className="mt-2 text-center text-muted small">
-                Automatic default login is enabled using admin / adminpass.
+                Automatic default login is enabled using sa / adminpass.
               </div>
               <div className="mt-2 text-center text-muted small">
-                Sample credentials: admin / adminpass
+                Sample credentials: sa / adminpass
               </div>
             </div>
           </div>
