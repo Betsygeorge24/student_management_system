@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+const backendURL = import.meta.env.VITE_BACKENDURL || process.env.REACT_APP_BACKENDURL || 'http://127.0.0.1:8000'
+
 const API = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api',
+  baseURL: `${backendURL}/api`,
   headers: {
     'Content-Type': 'application/json',
   },
