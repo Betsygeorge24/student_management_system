@@ -5,8 +5,8 @@ def create_default_data(apps, schema_editor):
     Student = apps.get_model('students', 'Student')
     User = apps.get_model('auth', 'User')
 
-    if not User.objects.filter(username='sa').exists():
-        User.objects.create_superuser('sa', 'sa@example.com', 'adminpass')
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', 'adminpass')
 
     if not Student.objects.exists():
         Student.objects.create(name='Maria Rivera', email='maria.rivera@example.com', age=15, grade='10')
