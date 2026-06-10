@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
+import { useEffect, useState } from 'react'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import StudentList from './pages/StudentList'
@@ -9,12 +10,21 @@ import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
 import { setAuthHeader } from './services/api'
 
-const token = localStorage.getItem('studentAppToken')
-if (token) {
-  setAuthHeader(token)
-}
-
 function App() {
+  const [isTokenReady, setIsTokenReady] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem('studentAppToken')
+    if (token) {
+      setAuthHeader(token)
+    }
+    setIsTokenReady(true)
+  }, [])
+
+  if (!isTokenReady) {
+    return <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}></div>
+  }
+
   return (
     <BrowserRouter>
       <Routes>

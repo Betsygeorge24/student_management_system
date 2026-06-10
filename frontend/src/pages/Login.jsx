@@ -27,7 +27,9 @@ const Login = () => {
   useEffect(() => {
     const token = localStorage.getItem('studentAppToken')
     if (token) {
-      navigate('/dashboard', { replace: true })
+      setTimeout(() => {
+        navigate('/dashboard', { replace: true })
+      }, 0)
     }
   }, [navigate])
 
