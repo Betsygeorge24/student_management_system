@@ -1,9 +1,7 @@
 import axios from 'axios'
 
-const backendURL = import.meta.env.VITE_BACKENDURL || process.env.REACT_APP_BACKENDURL || 'http://127.0.0.1:8000'
-
 const API = axios.create({
-  baseURL: `${backendURL}/api`,
+  baseURL: 'https://student-management-system-2omp.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
