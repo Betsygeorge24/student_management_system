@@ -2,8 +2,10 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import path, include
 
+from django.http import JsonResponse
+
 def home(request):
-    return HttpResponse("Backend is working successfully 🚀")
+    return JsonResponse({"status": "ok"})
 
 urlpatterns = [
     path('', home),
