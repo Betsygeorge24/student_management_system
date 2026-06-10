@@ -5,12 +5,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-please-change-this-secret-key')
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('true', '1')
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.onrender.com']
 CSRF_TRUSTED_ORIGINS = [
-    "https://student-management-system-2omp.onrender.com"
+    "https://*.onrender.com"
 ]
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
