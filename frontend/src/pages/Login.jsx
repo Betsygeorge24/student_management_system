@@ -28,7 +28,26 @@ const Login = () => {
     const token = localStorage.getItem('studentAppToken')
     if (token) {
       navigate('/dashboard', { replace: true })
+      return
     }
+
+    const autoLogin = async () => {
+      setLoading(true)
+      try {
+        const response = await API.post('/login/', { username: 'admin', password: 'adminpass' })
+        const token = response.data.token
+        localStorage.setItem('studentAppToken', token)
+        setAuthHeader(token)
+        toast.success('Logged in as default admin')
+        navigate('/dashboard', { replace: true })
+      } catch (error) {
+        console.error('Default login failed', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    autoLogin()
   }, [navigate])
 
   const handleSubmit = async (event) => {
@@ -85,6 +104,9 @@ const Login = () => {
                 </button>
               </form>
               <div className="mt-3 text-center text-muted small">{helperText}</div>
+              <div className="mt-2 text-center text-muted small">
+                Automatic default login is enabled using admin / adminpass.
+              </div>
               <div className="mt-2 text-center text-muted small">
                 Sample credentials: admin / adminpass
               </div>
